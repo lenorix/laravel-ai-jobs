@@ -15,7 +15,6 @@ class AiJobServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('laravel-ai-jobs')
-            ->hasConfigFile();
+            ->name('laravel-ai-jobs');
     }
 }

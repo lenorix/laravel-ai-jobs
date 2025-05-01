@@ -11,7 +11,7 @@ class GptChatFuture extends JobTracker
 
     public function getResultIn(GPTChat $gptChat): void
     {
-        if (!$this->isSuccessful()) {
+        if (! $this->isSuccessful()) {
             throw new \Exception('Job is not successful, cannot update messages.');
         }
         $gptChat->messages = $this->result;

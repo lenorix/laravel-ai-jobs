@@ -17,6 +17,9 @@ class GptChatFuture extends JobTracker
             throw new \Exception('Job is not successful, cannot update messages.');
         }
         $gptChat->messages = array_map(function ($message) {
+            if (is_array($message['content'])) {
+                $message['content'] = json_encode($message['content']);
+            }
             return ChatMessage::fromResponseMessage(CreateResponseMessage::from($message));
         }, $this->result);
     }

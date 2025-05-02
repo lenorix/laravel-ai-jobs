@@ -3,7 +3,9 @@
 namespace Lenorix\LaravelAiJobs\Models;
 
 use Lenorix\LaravelJobStatus\Models\JobTracker;
+use MalteKuhr\LaravelGPT\Enums\ChatRole;
 use MalteKuhr\LaravelGPT\GPTChat;
+use MalteKuhr\LaravelGPT\Models\ChatFunctionCall;
 use MalteKuhr\LaravelGPT\Models\ChatMessage;
 use OpenAI\Responses\Chat\CreateResponseMessage;
 
@@ -20,7 +22,14 @@ class GptChatFuture extends JobTracker
             if (is_array($message['content'])) {
                 $message['content'] = json_encode($message['content']);
             }
-            return ChatMessage::fromResponseMessage(CreateResponseMessage::from($message));
+            $name = $message['name'] ?? null;
+            $message = CreateResponseMessage::from($message);
+            return ChatMessage::from(
+                role: ChatRole::from($message->role),
+                content: $message->content,
+                name: $name,
+                functionCall: $message->functionCall ? ChatFunctionCall::fromResponseFunctionCall($message->functionCall) : null
+            );
         }, $this->result);
     }
 }

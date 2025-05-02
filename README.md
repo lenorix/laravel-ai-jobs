@@ -19,6 +19,15 @@ You can install the package via composer:
 composer require lenorix/laravel-ai-jobs
 ```
 
+This uses `lenorix/laravel-job-status` package, so you need to use its migrations.
+
+You can publish and run the migrations with:
+
+```bash
+php artisan vendor:publish --tag="laravel-job-status-migrations"
+php artisan migrate
+```
+
 ## Usage
 
 After create your `maltekuhr/laravel-gpt` class extending `GPTChat` create a job and extend

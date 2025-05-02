@@ -4,6 +4,8 @@ namespace Lenorix\LaravelAiJobs\Models;
 
 use Lenorix\LaravelJobStatus\Models\JobTracker;
 use MalteKuhr\LaravelGPT\GPTChat;
+use MalteKuhr\LaravelGPT\Models\ChatMessage;
+use OpenAI\Responses\Chat\CreateResponseMessage;
 
 class GptChatFuture extends JobTracker
 {
@@ -14,6 +16,8 @@ class GptChatFuture extends JobTracker
         if (! $this->isSuccessful()) {
             throw new \Exception('Job is not successful, cannot update messages.');
         }
-        $gptChat->messages = $this->result;
+        $gptChat->messages = array_map(function ($message) {
+            return ChatMessage::fromResponseMessage(CreateResponseMessage::from($message));
+        }, $this->result);
     }
 }

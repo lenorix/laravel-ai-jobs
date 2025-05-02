@@ -13,17 +13,25 @@ class GptChatFuture extends JobTracker
 {
     protected $table = 'job_trackers';
 
+    /**
+     * Use the result of a job to update messages
+     *  in a `GPTChat` instance.
+     *
+     * @throw If the job result is null or empty, as it's not available.
+     */
     public function getResultIn(GPTChat $gptChat): void
     {
-        if (!$this->isSuccessful()) {
-            throw new \Exception('Job is not successful, cannot update messages.');
+        if (!$this->result) {
+            throw new \Exception('Job result is not available.');
         }
+
         $gptChat->messages = array_map(function ($message) {
             if (is_array($message['content'])) {
                 $message['content'] = json_encode($message['content']);
             }
             $name = $message['name'] ?? null;
             $message = CreateResponseMessage::from($message);
+
             return ChatMessage::from(
                 role: ChatRole::from($message->role),
                 content: $message->content,

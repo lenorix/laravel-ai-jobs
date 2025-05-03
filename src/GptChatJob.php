@@ -18,6 +18,7 @@ abstract class GptChatJob implements ShouldQueue
     use Trackable;
 
     public int $tries = 5;
+
     public array $messages;
 
     public function __construct(GPTChat $gptChat)

@@ -117,9 +117,13 @@ class ReplyOrQueueAiJobGPTAction extends GPTAction
         // Review with AI if the AI is doing well deciding about queuing while thinking fast response.
         if (! $latestAssistantMessage['queue']) {
             try {
+                // Why? This one use original system prompt for AI can reply and consider the original task,
+                // but that even needed that can let to answers with wrong queue decision. Then other
+                // request decide better with a specialized system prompt and only the latest AI answer.
                 $reviewQueueDecision = AdditionalAiIterationGPTAction::make()
                     ->send($latestAssistantMessage['message'] ?? '');
             } catch (\Exception $e) {
+                // In case of doubt, better queue job and let use all tools and functions.
                 $reviewQueueDecision = true;
             }
             $latestAssistantMessage['queue'] = $reviewQueueDecision;

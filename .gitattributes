@@ -18,5 +18,6 @@
 /UPGRADING.md       export-ignore
 /CHANGELOG.md       export-ignore
 /README.md          export-ignore
+/LICENSE.md         export-ignore
 /phpstan.neon.dist  export-ignore
 /phpstan-baseline.neon  export-ignore

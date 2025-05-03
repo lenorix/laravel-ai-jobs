@@ -2,8 +2,8 @@
 
 namespace Lenorix\LaravelAiJobs\Actions\AdditionalAiIteration;
 
-use MalteKuhr\LaravelGPT\GPTAction;
 use Closure;
+use MalteKuhr\LaravelGPT\GPTAction;
 
 class AdditionalAiIterationGPTAction extends GPTAction
 {

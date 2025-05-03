@@ -2,13 +2,13 @@
 
 namespace Lenorix\LaravelAiJobs\Actions\ReplyOrQueueAiJob;
 
+use Closure;
 use Lenorix\LaravelAiJobs\Actions\AdditionalAiIteration\AdditionalAiIterationGPTAction;
 use MalteKuhr\LaravelGPT\Enums\ChatRole;
 use MalteKuhr\LaravelGPT\Extensions\FillableGPTChat;
 use MalteKuhr\LaravelGPT\Extensions\FillableGPTFunction;
 use MalteKuhr\LaravelGPT\Generators\ChatPayloadGenerator;
 use MalteKuhr\LaravelGPT\GPTAction;
-use Closure;
 use MalteKuhr\LaravelGPT\GPTChat;
 
 class ReplyOrQueueAiJobGPTAction extends GPTAction
@@ -20,8 +20,9 @@ class ReplyOrQueueAiJobGPTAction extends GPTAction
     public function systemMessage(): ?string
     {
         $functions = ChatPayloadGenerator::make($this->gptChat)->generate()['functions'] ?? [];
+
         return $this->gptChat->systemMessage() ?? ' '
-            . <<<'EOT'
+            .<<<'EOT'
 
             ## Decide if needs to queue a job
 
@@ -33,8 +34,8 @@ class ReplyOrQueueAiJobGPTAction extends GPTAction
 
             Functions available when `queue` is true:
         EOT
-            . json_encode($functions)
-            . <<<'EOT'
+            .json_encode($functions)
+            .<<<'EOT'
 
             Examples:
 
@@ -56,7 +57,7 @@ class ReplyOrQueueAiJobGPTAction extends GPTAction
 
     public function function(): Closure
     {
-        return function (bool $queue=true, ?string $message=null): mixed {
+        return function (bool $queue = true, ?string $message = null): mixed {
             return [
                 'queue' => $queue !== false,
                 'message' => $message,
@@ -88,7 +89,7 @@ class ReplyOrQueueAiJobGPTAction extends GPTAction
                     description: fn () => $this->description(),
                     function: fn () => $this->function(),
                     rules: fn () => $this->rules(),
-                )
+                ),
             ],
             functionCall: fn () => FillableGPTFunction::class,
             model: fn () => $this->model(),

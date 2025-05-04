@@ -24,7 +24,7 @@ This uses `lenorix/laravel-job-status` package, so you need to use its migration
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-job-status-migrations"
+php artisan vendor:publish --tag="job-status-migrations"
 php artisan migrate
 ```
 

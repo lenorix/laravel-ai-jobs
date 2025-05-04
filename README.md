@@ -34,7 +34,7 @@ After create your `maltekuhr/laravel-gpt` class extending `GPTChat` create a job
  `Lenorix\LaravelAiJobs\GptChatJob` class.
 
 ```php
-class MyGptJob extends GptChatJob
+class MyGptJob extends GptChatJob implements ShouldQueue
 {
     protected function getGptChatInstance(): GPTChat
     {
@@ -46,7 +46,7 @@ class MyGptJob extends GptChatJob
 And now queue it instead of use `send` method, and save the tracker ID:
 
 ```php
-$trackerId = MyGptJob::dispatch($myGptChat)
+$trackerId = MyGptJob::dispatchWithTrack($myGptChat)
     ->getJob()
     ->tracker()
     ->id;

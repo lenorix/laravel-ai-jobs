@@ -19,9 +19,12 @@ class AdditionalAiIterationGPTAction extends GPTAction
 
             Return `false` when:
             - The reply is purely informational and complete.
+            - The reply is a follow-up to a previous message and doesn't require further action.
+            - The reply asks for user input or confirmation.
 
             Triggering patterns for `true`:
-            - Replies starting with: `I will`, `Let me`, `Searching`, `Collecting`, `Getting`, `Looking`
+            - Replies that imply a future action, side effect, or tool invocation.
+                Like: `I will`, `Let me`, `Searching`, `Collecting`, `Getting`, `Looking`
             - Empty string or generic placeholders (e.g., `...`, `Hold on`)
 
             Examples:

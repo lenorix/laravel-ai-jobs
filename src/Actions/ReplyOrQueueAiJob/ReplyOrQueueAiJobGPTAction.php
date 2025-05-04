@@ -28,9 +28,13 @@ class ReplyOrQueueAiJobGPTAction extends GPTAction
 
             You must always decide:
             - `queue`: **true** or **false**
+            And optionally:
             - `message`: the assistant’s reply
 
             **Rule:** if you plan to call any function/tool, you **must** set `queue` to `true`.
+
+            If you want user confirmation or to ask for more details, you **must** set `queue` to `false`
+            and return a message to the user.
 
             Functions available when `queue` is true:
         EOT

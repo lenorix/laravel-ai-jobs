@@ -39,18 +39,18 @@ class ReplyOrQueueAiJobGPTAction extends GPTAction
 
             Examples:
 
-            Input: "I will search the database for user data"
+            Input: "I will search the database for data"
             Output:
             {
               "queue": true,
               "message": "Let me fetch that for you..."
             }
 
-            Input: "What’s the weather today?"
+            Input: "Hello"
             Output:
             {
               "queue": false,
-              "message": "The weather is sunny."
+              "message": "Hello! How can I assist you today?"
             }
         EOT;
     }

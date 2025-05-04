@@ -53,6 +53,9 @@ class AdditionalAiIterationGPTAction extends GPTAction
             Input: "Searching ..."
             Output: `true`
 
+            Input: "I'm here to help you ... Also, if you have specific ... in mind, let me know!"
+            Output: `false`
+
             Input: "Collecting ..."
             Output: `true`
 

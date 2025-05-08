@@ -10,22 +10,20 @@ class AdditionalAiIterationGPTAction extends GPTAction
     public function systemMessage(): ?string
     {
         return <<<'EOT'
-            Based on the message, decide if an additional AI iteration is required.
+            Based on the message, decide fastly if an additional AI iteration is required.
 
             Return `true` when:
-            - The reply implies a future action, side effect, or tool invocation.
-            - The reply could be enhanced with proactive details.
+            - The reply implies or requires the AI use functions and tools for RAF or MCP, or a side effect.
+                Like: `I will`, `Let me do`, `Searching`, `Collecting`, `Getting`, `Looking`
+            - The reply require access to databases or HTTP APIs.
             - The reply is empty or a placeholder.
 
             Return `false` when:
             - The reply is purely informational and complete.
+            - The reply is a simple confirmation or acknowledgment.
+            - The reply is greeting or gratitude.
             - The reply is a follow-up to a previous message and doesn't require further action.
             - The reply asks for user input or confirmation.
-
-            Triggering patterns for `true`:
-            - Replies that imply a future action, side effect, or tool invocation.
-                Like: `I will`, `Let me`, `Searching`, `Collecting`, `Getting`, `Looking`
-            - Empty string or generic placeholders (e.g., `...`, `Hold on`)
 
             Examples:
 
@@ -72,6 +70,9 @@ class AdditionalAiIterationGPTAction extends GPTAction
             Output: `false`
 
             Input: "Let me know if you need anything else."
+            Output: `false`
+
+            Input: "Hi!"
             Output: `false`
         EOT;
 

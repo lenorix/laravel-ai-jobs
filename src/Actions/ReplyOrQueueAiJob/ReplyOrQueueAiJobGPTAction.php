@@ -79,7 +79,7 @@ class ReplyOrQueueAiJobGPTAction extends GPTAction
     {
         return [
             'queue' => 'required|boolean',
-            'message' => 'sometimes|string',
+            'message' => 'sometimes|string|max:150',
         ];
     }
 

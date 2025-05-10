@@ -115,4 +115,29 @@ EOT;
             'message' => 'sometimes|string|max:300',
         ];
     }
+
+    public function sendToDecide(): mixed
+    {
+        $this->chat = FillableGPTChat::make(
+            systemMessage: fn () => $this->systemMessage(),
+            functions: fn () => [
+                new FillableGPTFunction(
+                    name: fn () => $this->functionName(),
+                    description: fn () => $this->description(),
+                    function: fn () => $this->function(),
+                    rules: fn () => $this->rules(),
+                )
+            ],
+            functionCall: fn () => FillableGPTFunction::class,
+            model: fn () => $this->model(),
+            temperature: fn () => $this->temperature(),
+            maxTokens: fn () => $this->maxTokens(),
+            sending: fn () => $this->sending(),
+            received: fn () => $this->received(),
+        );
+
+        $this->chat->send();
+
+        return $this->chat->latestMessage()->content;
+    }
 }

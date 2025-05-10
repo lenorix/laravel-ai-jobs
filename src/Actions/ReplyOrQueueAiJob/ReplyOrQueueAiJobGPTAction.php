@@ -36,6 +36,7 @@ Rules:
   • If queue=true, `message` MUST be null.
   • Do not emit any text outside this JSON.
   • Reply `message` can not tell it will do an action or call a function/tool, only can be a simple reply.
+  • Reply `message`must be short, no more than 500 characters, if more, use queue=true.
 
 Queue=true when:
   - User or assistant is calling/executing tools (search, fetch, call API, run, query).
@@ -91,6 +92,7 @@ Summary:
 - Queue=true means the assistant needs to do something or thinks a complex reply.
 - Queue=false means the assistant can reply directly and `message` is the final answer.
 - The assistant should not say it will do something or call a function/tool in `message`, instead it must queue for it.
+- A fast reply must be short, no more than 500 characters.
 EOT;
     }
 
@@ -114,7 +116,7 @@ EOT;
     {
         return [
             'queue' => 'required|boolean',
-            'message' => 'sometimes|string|max:300',
+            'message' => 'sometimes|string|max:500',
         ];
     }
 

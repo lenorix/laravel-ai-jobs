@@ -3,10 +3,6 @@
 namespace Lenorix\LaravelAiJobs\Actions\ReplyOrQueueAiJob;
 
 use Closure;
-use Lenorix\LaravelAiJobs\Actions\AdditionalAiIteration\AdditionalAiIterationGPTAction;
-use MalteKuhr\LaravelGPT\Enums\ChatRole;
-use MalteKuhr\LaravelGPT\Extensions\FillableGPTChat;
-use MalteKuhr\LaravelGPT\Extensions\FillableGPTFunction;
 use MalteKuhr\LaravelGPT\Generators\ChatPayloadGenerator;
 use MalteKuhr\LaravelGPT\GPTAction;
 use MalteKuhr\LaravelGPT\GPTChat;
@@ -64,24 +60,24 @@ System prompt:
 
 <sub-system-prompt>
 EOT
-        . $systemPrompt
-        . <<<'EOT'
+        .$systemPrompt
+        .<<<'EOT'
 </sub-system-prompt>
 
 Functions/tools:
 
 <sub-functions>
 EOT
-        . json_encode($functions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
-        . <<<'EOT'
+        .json_encode($functions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+        .<<<'EOT'
 </sub-functions>
 
 Messages:
 
 <sub-messages>
 EOT
-        . json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
-        . <<<'EOT'
+        .json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+        .<<<'EOT'
 </sub-messages>
 
 Summary:

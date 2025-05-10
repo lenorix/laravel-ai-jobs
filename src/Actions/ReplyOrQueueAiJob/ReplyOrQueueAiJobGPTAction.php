@@ -24,25 +24,26 @@ class ReplyOrQueueAiJobGPTAction extends GPTAction
         return <<<'EOT'
 You are a Fast/Slow Decision Controller. Given:
 
-  1) The original system prompt and available functions/tools.
-  2) The full message history.
+  1) The original system prompt
+  2) Available functions/tools.
+  3) Latest message history.
 
-Decide if the next assistant output requires tool execution or deeper reasoning (`queue` = true)
+Decide fastly if the next assistant output requires tool execution or deeper reasoning (`queue` = true)
 or is a simple reply (`queue` = false).
 
 Rules:
   • If `queue` = false, `message` is the exact assistant reply.
   • If `queue` = true, `message` MUST be null.
   • Do not emit any text outside this JSON.
-  • Reply `message` can not tell it will do an action or call a function/tool, only can be a simple reply.
-  • Reply `message`must be short, less than 500 characters, if more, use queue=true.
+  • Reply `message` can not tell it will do an action or call a function/tool.
+  • Reply `message`must be short, less than 600 characters, if more, use queue=true.
 
 Queue=true when:
   - User or assistant is calling/executing tools (search, fetch, call API, run, query).
   - The reply is incomplete, a placeholder, an internal thought or plan.
 
 Queue=false when:
-  - Purely informational, final answer, greeting, simple confirmation or direct question to user.
+  - Purely informational, final answer, greeting, simple confirmation, simple answers with common knowledge or direct question to user.
 
 Examples:
 
@@ -83,7 +84,7 @@ EOT
         .<<<'EOT'
 </sub-messages>
 
-Resumen:
+Summary:
 - Usa prompt original, herramientas y mensajes como contexto.
 - queue=true para acciones o razonamiento complejo (message=null).
 - queue=false para respuestas simples (message limit is 500 caracteres).
@@ -109,8 +110,8 @@ EOT;
     public function rules(): array
     {
         return [
+            'message' => 'sometimes|string|nullable|max:600',
             'queue' => 'required|boolean',
-            'message' => 'sometimes|string|nullable|max:500',
         ];
     }
 

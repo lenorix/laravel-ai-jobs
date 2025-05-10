@@ -126,7 +126,7 @@ EOT;
                     description: fn () => $this->description(),
                     function: fn () => $this->function(),
                     rules: fn () => $this->rules(),
-                )
+                ),
             ],
             functionCall: fn () => FillableGPTFunction::class,
             model: fn () => $this->model(),

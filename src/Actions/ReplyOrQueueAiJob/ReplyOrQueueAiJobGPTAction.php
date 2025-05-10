@@ -109,8 +109,8 @@ EOT;
     public function rules(): array
     {
         return [
-            'queue' => 'sometimes|boolean',
-            'message' => 'sometimes|string',
+            'queue' => 'required|boolean',
+            'message' => 'sometimes|string|nullable|max:500',
         ];
     }
 

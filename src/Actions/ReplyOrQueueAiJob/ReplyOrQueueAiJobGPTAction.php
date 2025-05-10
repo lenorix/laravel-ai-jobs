@@ -3,6 +3,8 @@
 namespace Lenorix\LaravelAiJobs\Actions\ReplyOrQueueAiJob;
 
 use Closure;
+use MalteKuhr\LaravelGPT\Extensions\FillableGPTChat;
+use MalteKuhr\LaravelGPT\Extensions\FillableGPTFunction;
 use MalteKuhr\LaravelGPT\Generators\ChatPayloadGenerator;
 use MalteKuhr\LaravelGPT\GPTAction;
 use MalteKuhr\LaravelGPT\GPTChat;

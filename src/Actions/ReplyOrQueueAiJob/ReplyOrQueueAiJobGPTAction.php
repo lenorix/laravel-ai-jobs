@@ -35,7 +35,7 @@ Rules:
   • If `queue` = true, `message` MUST be null.
   • Do not emit any text outside this JSON.
   • Reply `message` can not tell it will do an action or call a function/tool, only can be a simple reply.
-  • Reply `message`must be short, no more than 500 characters, if more, use queue=true.
+  • Reply `message`must be short, less than 500 characters, if more, use queue=true.
 
 Queue=true when:
   - User or assistant is calling/executing tools (search, fetch, call API, run, query).
@@ -83,15 +83,10 @@ EOT
         .<<<'EOT'
 </sub-messages>
 
-Summary:
-
-- The system prompt is the original system prompt.
-- The functions/tools are the available functions/tools.
-- The messages are the available context messages.
-- `queue` = true means the assistant needs to do something or thinks a complex reply.
-- `queue` = false means the assistant can reply directly and `message` is the final answer.
-- The assistant should not say it will do something or call a function/tool in `message`, instead it must queue for it.
-- A fast reply must be short, no more than 500 characters.
+Resumen:
+- Usa prompt original, herramientas y mensajes como contexto.
+- queue=true para acciones o razonamiento complejo (message=null).
+- queue=false para respuestas simples (message limit is 500 caracteres).
 EOT;
     }
 
@@ -114,8 +109,8 @@ EOT;
     public function rules(): array
     {
         return [
-            'queue' => 'required|boolean',
-            'message' => 'sometimes|string|max:500',
+            'queue' => 'sometimes|boolean',
+            'message' => 'sometimes|string',
         ];
     }
 

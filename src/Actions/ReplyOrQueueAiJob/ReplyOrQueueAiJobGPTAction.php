@@ -18,7 +18,6 @@ class ReplyOrQueueAiJobGPTAction extends GPTAction
     public function systemMessage(): ?string
     {
         $systemPrompt = $this->gptChat->systemMessage() ?? '';
-        $messages = $this->gptChat->messages;
         $functions = ChatPayloadGenerator::make($this->gptChat)->generate()['functions'] ?? [];
 
         return <<<'EOT'
@@ -30,35 +29,6 @@ You are a Fast/Slow Decision Controller. Given:
 
 Decide fastly if the next assistant output requires tool execution or deeper reasoning (`queue` = true)
 or is a simple reply (`queue` = false).
-
-Rules:
-  • If `queue` = false, `message` is the exact assistant reply.
-  • If `queue` = true, `message` MUST be null.
-  • Do not emit any text outside this JSON.
-  • Reply `message` can not tell it will do an action or call a function/tool.
-  • Reply `message`must be short, less than 600 characters, if more, use queue=true.
-
-Queue=true when:
-  - User or assistant is calling/executing tools (search, fetch, call API, run, query).
-  - The reply is incomplete, a placeholder, an internal thought or plan.
-
-Queue=false when:
-  - Purely informational, final answer, greeting, simple confirmation, simple answers with common knowledge or direct question to user.
-
-Examples:
-
-  1) Greeting:
-     Last Input: "Hello!"
-     Your Output: "Hi there!"
-     -> {"queue": false, "message": "Hi there!"}
-
-  2) Tool request or internal reasoning:
-     Your Output: "Let me fetch the latest data."
-     -> {"queue": true, "message": null}
-
-  3) Final info:
-     Your Output: "Here’s the report."
-     -> {"queue": false, "message": "Here’s the report."}
 
 System prompt:
 
@@ -76,18 +46,41 @@ EOT
         .<<<'EOT'
 </sub-functions>
 
-Messages:
+Decide if reply using original system prompt and context (`sub-system-prompt`) or queue for deep reasoning and use tools.
 
-<sub-messages>
-EOT
-        .json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
-        .<<<'EOT'
-</sub-messages>
+Queue=true when:
+  - Require calling/executing tools/functions.
 
-Summary:
-- Usa prompt original, herramientas y mensajes como contexto.
-- queue=true para acciones o razonamiento complejo (message=null).
-- queue=false para respuestas simples (message limit is 500 caracteres).
+Queue=false when:
+  - greeting.
+  - simple answers with knowledge from current context.
+  - ask to user anything.
+
+Mandatory Rules:
+  • Reply in `message` must be short, less than 600 characters, if more, use queue=true.
+  • Reply `message` can not tell it will do an action or call a function/tool if `queue` is false.
+  • If `queue` = false, `message` is the exact assistant reply.
+  • If `message` ask anything or require more details, use queue=false.
+  • Only emit JSON.
+
+Examples:
+
+  1) Greeting:
+     User Input: "Hello!"
+     Assistant Output: "Hi there!"
+     -> {"queue": false, "message": "Hi there!"}
+
+  2) Tool request or internal reasoning:
+     Assistant Output: "Let me fetch the latest data for you."
+     -> {"queue": true, "message": "Let me fetch the latest data for you."}
+
+  3) Final info:
+     Assistant Output: "I'm fine."
+     -> {"queue": false, "message": "I'm fine."}
+
+  4) Ask info:
+     Assistant Output: "From where do you ...?"
+     -> {"queue": false, "message": "From where do you ...?"}
 EOT;
     }
 
@@ -134,6 +127,9 @@ EOT;
             sending: fn () => $this->sending(),
             received: fn () => $this->received(),
         );
+
+        $messages = $this->gptChat->messages;
+        $this->chat->addMessage("<sub-messages>" . json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "</sub-messages>");
 
         $this->chat->send();
 

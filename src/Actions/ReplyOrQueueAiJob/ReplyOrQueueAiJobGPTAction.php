@@ -129,7 +129,7 @@ EOT;
         );
 
         $messages = $this->gptChat->messages;
-        $this->chat->addMessage("<sub-messages>" . json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "</sub-messages>");
+        $this->chat->addMessage('<sub-messages>'.json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).'</sub-messages>');
 
         $this->chat->send();
 

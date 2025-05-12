@@ -110,10 +110,17 @@ EOT;
     {
         $messages = $this->gptChat->messages;
 
-        return $this->send(
-            '<sub-messages>'
-            .json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
-            .'</sub-messages>'
-        );
+        try {
+            return $this->send(
+                '<sub-messages>'
+                .json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+                .'</sub-messages>'
+            );
+        } catch (\Exception $e) {
+            return [
+                'queue' => true,
+                'message' => null,
+            ];
+        }
     }
 }

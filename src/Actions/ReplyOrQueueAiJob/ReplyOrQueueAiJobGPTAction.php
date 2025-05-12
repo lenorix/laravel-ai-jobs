@@ -97,7 +97,7 @@ EOT;
     public function temperature(): ?float
     {
         // Less temperature helps to detect if the assistant is in a infinite loop.
-        return 0.15;
+        return 0.10;
     }
 
     public function rules(): array
@@ -110,29 +110,11 @@ EOT;
 
     public function sendToDecide(): mixed
     {
-        $this->chat = FillableGPTChat::make(
-            systemMessage: fn () => $this->systemMessage(),
-            functions: fn () => [
-                new FillableGPTFunction(
-                    name: fn () => $this->functionName(),
-                    description: fn () => $this->description(),
-                    function: fn () => $this->function(),
-                    rules: fn () => $this->rules(),
-                ),
-            ],
-            functionCall: fn () => FillableGPTFunction::class,
-            model: fn () => $this->model(),
-            temperature: fn () => $this->temperature(),
-            maxTokens: fn () => $this->maxTokens(),
-            sending: fn () => $this->sending(),
-            received: fn () => $this->received(),
-        );
-
         $messages = $this->gptChat->messages;
-        $this->chat->addMessage('<sub-messages>'.json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).'</sub-messages>');
-
-        $this->chat->send();
-
-        return $this->chat->latestMessage()->content;
+        return $this->send(
+            '<sub-messages>'
+            . json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+            . '</sub-messages>'
+        );
     }
 }

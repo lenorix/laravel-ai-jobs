@@ -48,6 +48,7 @@ Decide if reply using original system prompt and context (`sub-system-prompt`) o
 
 Queue=true when:
   - Require calling/executing tools/functions.
+  - Answer requires be longer than 600 characters.
 
 Queue=false when:
   - greeting.
@@ -55,6 +56,7 @@ Queue=false when:
   - ask to user anything.
 
 Mandatory Rules:
+  • If message requires be longer than 600 characters, use `queue=true` and `message` = null.
   • Reply in `message` must be short, less than 600 characters, if more, use queue=true.
   • Reply `message` can not tell it will do an action or call a function/tool if `queue` is false.
   • If `queue` = false, `message` is the exact assistant reply.

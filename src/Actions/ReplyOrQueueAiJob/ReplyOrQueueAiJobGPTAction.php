@@ -3,8 +3,6 @@
 namespace Lenorix\LaravelAiJobs\Actions\ReplyOrQueueAiJob;
 
 use Closure;
-use MalteKuhr\LaravelGPT\Extensions\FillableGPTChat;
-use MalteKuhr\LaravelGPT\Extensions\FillableGPTFunction;
 use MalteKuhr\LaravelGPT\Generators\ChatPayloadGenerator;
 use MalteKuhr\LaravelGPT\GPTAction;
 use MalteKuhr\LaravelGPT\GPTChat;
@@ -111,10 +109,11 @@ EOT;
     public function sendToDecide(): mixed
     {
         $messages = $this->gptChat->messages;
+
         return $this->send(
             '<sub-messages>'
-            . json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
-            . '</sub-messages>'
+            .json_encode($messages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+            .'</sub-messages>'
         );
     }
 }

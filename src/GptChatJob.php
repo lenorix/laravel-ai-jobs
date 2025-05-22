@@ -6,7 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Lenorix\LaravelAiJobs\Models\GptChatFuture;
 use Lenorix\LaravelJobStatus\Traits\Trackable;
-use MalteKuhr\LaravelGPT\GPTChat;
+use MalteKuhr\LaravelGPT\Shim\GPTChatShim;
 
 /**
  * Base to do `GPTChat::send()` in a job,
@@ -21,7 +21,7 @@ abstract class GptChatJob implements ShouldQueue
 
     public array $messages;
 
-    public function __construct(GPTChat $gptChat)
+    public function __construct(GPTChatShim $gptChat)
     {
         $this->messages = $gptChat->messages;
     }
@@ -30,7 +30,7 @@ abstract class GptChatJob implements ShouldQueue
      * Instance of a GPTChat to be used. The job will
      * supply the context messages to the instance.
      */
-    abstract protected function getGptChatInstance(): GPTChat;
+    abstract protected function getGptChatInstance(): GPTChatShim;
 
     public function handle(): void
     {

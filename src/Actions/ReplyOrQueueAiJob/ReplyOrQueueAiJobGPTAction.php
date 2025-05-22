@@ -108,6 +108,28 @@ EOT;
         ];
     }
 
+    public function parameters(): array
+    {
+        return [
+            'queue' => [
+                'type' => 'boolean',
+                'description' => 'If true, the assistant will queue the message for further processing.',
+            ],
+            'message' => [
+                'type' => 'string',
+                'description' => 'The assistant message to be processed.',
+            ],
+        ];
+    }
+
+    public function requiredParameters(): array
+    {
+        return [
+            'queue',
+            'message',
+        ];
+    }
+
     public function sendToDecide(): mixed
     {
         $messages = $this->gptChat->messages;

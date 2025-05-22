@@ -2,12 +2,11 @@
 
 namespace Lenorix\LaravelAiJobs\Models;
 
+use Lenorix\Ai\Chat\CoreMessage;
+use Lenorix\Ai\Chat\CoreMessageRole;
 use Lenorix\LaravelJobStatus\Models\JobTracker;
 use MalteKuhr\LaravelGPT\Enums\ChatRole;
-use MalteKuhr\LaravelGPT\GPTChat;
-use MalteKuhr\LaravelGPT\Models\ChatFunctionCall;
-use MalteKuhr\LaravelGPT\Models\ChatMessage;
-use OpenAI\Responses\Chat\CreateResponseMessage;
+use MalteKuhr\LaravelGPT\Shim\GPTChatShim;
 
 class GptChatFuture extends JobTracker
 {
@@ -19,25 +18,26 @@ class GptChatFuture extends JobTracker
      *
      * @throw If the job result is null or empty, as it's not available.
      */
-    public function getResultIn(GPTChat $gptChat): void
+    public function getResultIn(GPTChatShim $gptChat): void
     {
         if (! $this->result) {
             throw new \Exception('Job result is not available.');
         }
 
-        $gptChat->messages = array_map(function ($message) {
+        $gptChat->messages = array_filter(array_map(function ($message) {
             if (is_array($message['content'])) {
                 $message['content'] = json_encode($message['content']);
             }
-            $name = $message['name'] ?? null;
-            $message = CreateResponseMessage::from($message);
+            $role = $message['role'];
+            if ($role === ChatRole::FUNCTION->value) {
+                return null;
+            }
 
-            return ChatMessage::from(
-                role: ChatRole::from($message->role),
-                content: $message->content,
-                name: $name,
-                functionCall: $message->functionCall ? ChatFunctionCall::fromResponseFunctionCall($message->functionCall) : null
+            return new CoreMessage(
+                role: CoreMessageRole::from($role),
+                content: $message['content'],
+                toolCalls: $message['toolCalls'] ?? null,
             );
-        }, $this->result);
+        }, $this->result), fn ($i) => $i !== null);
     }
 }

@@ -4,10 +4,10 @@ namespace Lenorix\LaravelAiJobs\Actions\ReplyOrQueueAiJob;
 
 use Closure;
 use MalteKuhr\LaravelGPT\Generators\ChatPayloadGenerator;
-use MalteKuhr\LaravelGPT\GPTAction;
 use MalteKuhr\LaravelGPT\GPTChat;
+use MalteKuhr\LaravelGPT\Shim\GPTActionShim;
 
-class ReplyOrQueueAiJobGPTAction extends GPTAction
+class ReplyOrQueueAiJobGPTAction extends GPTActionShim
 {
     public function __construct(
         protected GPTChat $gptChat,
